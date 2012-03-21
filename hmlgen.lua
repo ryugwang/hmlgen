@@ -11,17 +11,10 @@ local function append_chars(hml, para, line, missing_styles)
 		str = str:gsub('\t', '<TAB/>')
 		return str
 	end
-
-	if line:find('^%^%^%{') then
-		para = hml:append_span(para, cook_(line), 'index_hint')
-		return para, missing_styles
-	end
-
-	--line = line:gsub('([^%$])%$([^%$].-)%$([^%$])', '%1$<!!inline_eq %2!!>$%3')
 	repeat
 		local i, j, m = line:find('<!!(.-) +')
 		if i then
-			if i and i > 1 then
+			if i > 1 then
 				para = hml:append_span(para, cook_(line:sub(1, i-1)), '')
 			end
 
@@ -29,22 +22,28 @@ local function append_chars(hml, para, line, missing_styles)
 				missing_styles[m] = true
 				m = ''
 			end
+
 			local i2, j2, m2 = line:find('!!>')
-			if i2 == nil then
-				j2 = -1
+			if i2 then
+				para = hml:append_span(para, cook_(line:sub(j+1, i2-1)), m)
+				line = line:sub(j2+1)
+			else
+				para = hml:append_span(para, cook_(line:sub(i)), '')
+				line = ''
 			end
-			para = hml:append_span(para, cook_(line:sub(j+1, i2-1)), m)
-			line = line:sub(j2+1)
 		else
 			para = hml:append_span(para, cook_(line), '')
 			line = ''
 		end
 	until #line == 0
+
 	return para, missing_styles
 end
 
 local function convert(infile, outfile, tplfile)
-	local hml = hmlbuilder.make_buildable(luahml.load(tplfile))
+	local doc_, err = luahml.load(tplfile)
+--print(doc_, err); os.exit(-1)
+	local hml = hmlbuilder.make_buildable(doc_)
 	local lines = seq.new_from_file(infile)
 	local missing_styles = {para = {}, char = {} }
 
