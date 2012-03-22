@@ -11,30 +11,40 @@ local function append_chars(hml, para, line, missing_styles)
 		str = str:gsub('\t', '<TAB/>')
 		return str
 	end
+	local stack = {''}
 	repeat
-		local i, j, m = line:find('<!!(.-) +')
-		if i then
-			if i > 1 then
-				para = hml:append_span(para, cook_(line:sub(1, i-1)), '')
+		local i = line:find('[<!]')
+		if i == nil then 
+			para = hml:append_span(para, cook_(line), prev_style)
+			return para, missing_styles
+		end
+
+		local j, k, m = line:find('^<!!(.-) +', i)
+		if j then
+			if j > 1 then 
+				para = hml:append_span(para, cook_(line:sub(1, j-1)), stack[#stack])
 			end
+
+			line = line:sub(k+1)
 
 			if hml.doc.char_styles[m] == nil then
 				missing_styles[m] = true
 				m = ''
 			end
-
-			local i2, j2, m2 = line:find('!!>')
-			if i2 then
-				para = hml:append_span(para, cook_(line:sub(j+1, i2-1)), m)
-				line = line:sub(j2+1)
-			else
-				para = hml:append_span(para, cook_(line:sub(i)), '')
-				line = ''
-			end
+			stack[#stack+1] = m
 		else
-			para = hml:append_span(para, cook_(line), '')
-			line = ''
+			j, k = line:find('^!!>', i)
+			if j then
+				para = hml:append_span(para, cook_(line:sub(1, j-1)), stack[#stack])
+				table.remove(stack)
+				if #stack == 0 then stack[1] = '' end
+				line = line:sub(k+1)
+			else
+				para = hml:append_span(para, cook_(line:sub(1, i)), stack[#stack])
+				line = line:sub(i+1)
+			end
 		end
+
 	until #line == 0
 
 	return para, missing_styles
@@ -78,6 +88,7 @@ local tplfile = arg[3] or 'tpl.hml'
 
 local missing_styles = convert(infile, outfile, tplfile)
 
+print('missing styles:')
 for k, v in pairs(missing_styles.para) do
 	print(k)
 end
