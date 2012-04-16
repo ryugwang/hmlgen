@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Hmlgen by ryugwang</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Hmlgen</h1>
+        <p>간단한 구조의 텍스트 파일로부터 HML 파일(HWP의 XML 버전)을 생성하는 유틸리티.</p>
+        <p class="view"><a href="https://github.com/ryugwang/hmlgen">View the Project on GitHub <small>ryugwang/hmlgen</small></a></p>
+        <ul>
+          <li><a href="https://github.com/ryugwang/hmlgen/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/ryugwang/hmlgen/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/ryugwang/hmlgen">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>hmlgen은 간단한 구조의 텍스트 파일과 문단, 글자 스타일들이 정의되어 있는 
+템플릿 HML로부터 유효한 HML을 생성하는 유틸리티입니다.</p>
+
+<p>대량/다수의 HWP 문서를 절차적인  방식으로 자동 생성하는(이를테면 DB의 내용으로부터
+보고서 생성 등) 것을 염두에 두고 만들고 있습니다.</p>
+
+<p><a href="https://github.com/ryugwang/xselec">xselec</a>과 <a href="https://github.com/ryugwang/luahml">luahml</a>에 
+의존합니다.</p>
+
+<p>아직 실험 단계이므로 다음 내용은 언제라도 변할 수 있습니다.</p>
+
+<p>실행 방법:</p>
+
+<pre><code>&gt; lua hmlgen.lua &lt;입력 텍스트 파일&gt; &lt;출력 HML 파일&gt; &lt;템플릿 HML 파일&gt;
+</code></pre>
+
+<p>입력  텍스트 파일의 규칙은 (잠정적으로) 다음과 같습니다.</p>
+
+<ul>
+<li>문자 부호화 방식은 반드시 UTF-8이어야 합니다.</li>
+<li>텍스트 한 줄이 하나의 문단입니다.</li>
+<li>'바탕글' 문단 이외의 문단 스타일을 원할 때에는 줄 제일 앞에 ]문단스타일_이름을 
+추가합니다.</li>
+<li>문단 안의 특정 문구에 특정 글자 스타일을 적용할 때에는 &lt;!!글자스타일_이름 .. !!&gt; 
+을 사용합니다.</li>
+<li>&amp;#nn; 또는 &amp;#xhh; 형태의 XML 개체 표현을 사용할 수 있습니다. 예를 들어 '&lt;!!' 자체를 
+문단에 포함시키려면 &amp;#60;!!를 사용하면 됩니다.</li>
+</ul><p>예:</p>
+
+<pre><code>]chapter 제1장 맛있는 떡볶이 만들기
+떡볶이의 맛은 &lt;!!emphasis 고추장!!&gt;이 결정한다. 따라서 ...
+</code></pre>
+
+<p>example 폴더에 간단한 예제 파일들이 있습니다. hmlgen.lua 파일이 있는 디렉터리에서
+다음을 실행한 후 out.hml을 열어 보세요.</p>
+
+<pre><code>&gt; lua hmlgen.lua example\example.predoc.txt out.hml example\tpl.hml 
+</code></pre>
+
+<p>차차 수식, 표, 그림 삽입 등도 지원할 계획입니다.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/ryugwang">ryugwang</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
