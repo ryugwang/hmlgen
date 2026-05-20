@@ -3,15 +3,15 @@ local strf = string.format
 local hmlbuilder = require'luahml_builder'
 local luahml = require'luahml'
 
+local function cook_(str)
+	str = str:gsub('&', '&amp;')
+	str = str:gsub('&amp;#(x?[0-9a-fA-F]+);', '&#%1;')
+	str = str:gsub('<', '&lt;')
+	str = str:gsub('\t', '<TAB/>')
+	return str
+end
+
 local function append_chars(hml, para, line, missing_styles)
-	local function cook_(str)
-		str = str:gsub('&', '&amp;')	
-		str = str:gsub('&amp;#(x?[0-9a-fA-F]+);', '&#%1;')	
-		str = str:gsub('<', '&lt;')
-		str = str:gsub('>', '&gt;')
-		str = str:gsub('\t', '<TAB/>')
-		return str
-	end
 	local stack = {''}
 	repeat
 		local i = line:find('[<!]')
