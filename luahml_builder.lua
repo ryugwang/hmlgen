@@ -42,7 +42,7 @@ local function make_buildable(doc)
 	t.output = function(self, puts) self.doc:output(puts) end
 	
 	local sections = doc.node'BODY>SECTION'
-	t.last_section = sections[#sections]
+	t.last_section = (sections and #sections > 0) and sections[#sections] or nil
 	
 	return t
 end
