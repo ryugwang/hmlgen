@@ -8,6 +8,7 @@ local function append_chars(hml, para, line, missing_styles)
 		str = str:gsub('&', '&amp;')	
 		str = str:gsub('&amp;#(x?[0-9a-fA-F]+);', '&#%1;')	
 		str = str:gsub('<', '&lt;')
+		str = str:gsub('>', '&gt;')
 		str = str:gsub('\t', '<TAB/>')
 		return str
 	end
