@@ -16,7 +16,7 @@ local function append_chars(hml, para, line, missing_styles)
 	repeat
 		local i = line:find('[<!]')
 		if i == nil then 
-			para = hml:append_span(para, cook_(line), prev_style)
+			para = hml:append_span(para, cook_(line), nil)
 			return para, missing_styles
 		end
 
